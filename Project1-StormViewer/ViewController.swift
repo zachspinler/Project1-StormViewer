@@ -23,6 +23,8 @@ class ViewController: UITableViewController {
         for item in items {
             if item.hasPrefix("nssl") {
                 pictures.append(item)
+            // Sort pictures array by number
+                pictures.sort()
             }
         }
     }
@@ -44,6 +46,9 @@ class ViewController: UITableViewController {
             
             // Success. Set it's selectedImage property
             vc.selectedImage = pictures[indexPath.row]
+            vc.selectedPictureNumber = indexPath.row + 1
+            vc.title = "Picture\(vc.selectedPictureNumber) of \(pictures.count)"
+            
         
             // Push it onto the navigation controller
             navigationController?.pushViewController(vc, animated: true)
