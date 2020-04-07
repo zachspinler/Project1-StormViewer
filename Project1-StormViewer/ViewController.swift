@@ -14,20 +14,34 @@ class ViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-    navigationController?.navigationBar.prefersLargeTitles = true
-        title     = "Storm Viewer"
+        configureNavigationBar()
+        loadNSSLImages()
+    
+    }
+    
+    func configureNavigationBar() {
+        title = " Storm Viewer"
+        navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    // Added background thread for loading image files
+    func loadNSSLImages() {
+        DispatchQueue.global(qos: .background).async {
         let fm      = FileManager.default
         let path    = Bundle.main.resourcePath!
         let items   = try! fm.contentsOfDirectory(atPath: path)
         
         for item in items {
             if item.hasPrefix("nssl") {
-                pictures.append(item)
-            // Sort pictures array by number
-                pictures.sort()
+                self.pictures.append(item)
+                // Sort pictures array by number
+                self.pictures.sort()
             }
         }
+            DispatchQueue.main.async { [weak self] in
+                self?.tableView.reloadData()
+            }
     }
+}
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return pictures.count
